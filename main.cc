@@ -1,152 +1,78 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #include "nodos.h"
-#include <iostream>
-
-#define MAXDEPTH 100
 
 using namespace std;
-int main(int argc, char **argv){
+int main(){
 
     int n = 5;
     int m = 10;
-    nodo *r = crear_nodo(0, 0, 1, n, m);
-    pos *lastPos = crear_pos(0, 0);
-    pos *lastVista = crear_pos(0, 1);
+    bool play = true;
+    bool err = true;
+    char c;
+    nodo *r = crear_nodo(0, 0, 1);
 
     crear_mapa(&r, n, m);
-    designarDireccionesIniciales(&r, n, m);
-    char c;
-    bool play = true;
     while (play) {
       nodo **posPersonaje = buscar_nodo_puntero_tipo(&r, 1);
-      lastPos->x = (*posPersonaje)->x;
-      lastPos->y = (*posPersonaje)->y;
-
       nodo **posVista = buscar_nodo_puntero_tipo(&r, 2);
-      lastVista->x = (*posVista)->x;
-      lastVista->y = (*posVista)->y;
 
-      imprimir_mapa(&r, n, m);
-      cout << endl << "Ingrese comando: ";
-      cin >> c;
-      switch (c) {
-        case 'w':
-          {
-            nodo **q = &(*posPersonaje)->up;
-
-            nodo **up = &(*posVista)->up;
-            if (((*up) != NULL) && ((*q) != NULL)) {
-              if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
-                if ((*posPersonaje)->destroyed) {
-                (*posPersonaje)->val = 3;
-                } else {
-                  (*posPersonaje)->val = 0;
-                }
-                (*posVista)->val = 1;
-                (*up)->val = 2;
-              } else {
-                if ((*posVista)->destroyed) {
-                  (*posVista)->val = 3;
-                } else {
-                  (*posVista)->val = 0;
-                }
-                (*q)->val = 2;
-              }
+      if ((*posPersonaje)->destroyed) {
+        mover(posPersonaje, posVista, c);
+      } else {
+        imprimir_mapa(&r, n, m);
+        if (err) {
+          cout << endl << "Ingrese \"w\" / \"a\" / \"s\" / \"d\" para moverse" << endl;
+          cout << "Ingrese \"q\" para eliminar las uniones de la tierra en \"x\"" << endl;
+          cout << "Ingrege \"e\" para crear una union en la direccion de \"x\"" << endl;
+          err = false;
+        }
+        cout << endl << "Ingrese comando: ";
+        cin >> c;
+        c = char(tolower(c));
+        switch (c) {
+          case 'w':
+            {
+              mover(posPersonaje, posVista, c);
+              break;
             }
-          }
-          break;
-        case 'a':
-          {
-            nodo **q = &(*posPersonaje)->left;
-
-            nodo **left = &(*posVista)->left;
-            if ((*left) != NULL) {
-              if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
-                if ((*posPersonaje)->destroyed) {
-                (*posPersonaje)->val = 3;
-                } else {
-                  (*posPersonaje)->val = 0;
-                }
-                (*posVista)->val = 1;
-                (*left)->val = 2;
-              } else {
-                if ((*posVista)->destroyed) {
-                  (*posVista)->val = 3;
-                } else {
-                (*posVista)->val = 0;
-                }
-                (*q)->val = 2;
-              }
+          case 'a':
+            {
+              mover(posPersonaje, posVista, c);
+              break;
             }
-
-          }
-          break;
-        case 's':
-          {
-            nodo **q = &(*posPersonaje)->down;
-            nodo **down = &(*posVista)->down;
-            if ((*down) != NULL) {
-              if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
-                if ((*posPersonaje)->destroyed) {
-                (*posPersonaje)->val = 3;
-                } else {
-                  (*posPersonaje)->val = 0;
-                }
-                (*posVista)->val = 1;
-                (*down)->val = 2;
-              } else {
-                if ((*posVista)->destroyed) {
-                  (*posVista)->val = 3;
-                } else {
-                (*posVista)->val = 0;
-                }
-                (*q)->val = 2;
-              }
+          case 's':
+            {
+              mover(posPersonaje, posVista, c);
+              break;
             }
-          }
-          break;
-        case 'd':
-          {
-            nodo **q = &(*posPersonaje)->right;
-            nodo **right = &(*posVista)->right;
-            if ((*right) != NULL) {
-              if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
-                if ((*posPersonaje)->destroyed) {
-                (*posPersonaje)->val = 3;
-                } else {
-                  (*posPersonaje)->val = 0;
-                }
-                (*posVista)->val = 1;
-                (*right)->val = 2;
-              } else {
-                if ((*posVista)->destroyed) {
-                  (*posVista)->val = 3;
-                } else {
-                (*posVista)->val = 0;
-                }
-                (*q)->val = 2;
-              }
+          case 'd':
+            {
+              mover(posPersonaje, posVista, c);
+              break;
             }
-          }
-          break;
-        case 'q':
-          {
-            DestruirTierra(posVista);
-            break;
-          }
-        case 'e':
-          {
-            crearTierra((*posPersonaje), (*posVista));
-            break;
-          }
+          case 'q':
+            {
+              destruirTierra(posVista);
+              break;
+            }
+          case 'e':
+            {
+              crearTierra((*posPersonaje), (*posVista));
+              break;
+            }
+          case '0':
+            {
+              cout << endl << "Gracias por jugar!!" << endl;
+              play = false;
+              break;
+            }
+          default:
+            err = true;
+        }
 
       }
+
     }
 
-    cout << "\n\n\n";
-    cout << "\n";
+    cout << endl;
     return EXIT_SUCCESS;
 }
