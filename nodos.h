@@ -10,9 +10,19 @@ typedef struct nodo{
     int val;
     bool destroyed;
     struct nodo *up;
+    bool up_tierra;
     struct nodo *down;
+    bool down_tierra;
     struct nodo *right;
+    bool right_tierra;
     struct nodo *left;
+    bool left_tierra;
+
+    // struct nodo *up;
+    // struct nodo *down;
+    // struct nodo *right;
+    // struct nodo *left;
+
     struct nodo *next;
 }nodo;
 
@@ -42,6 +52,11 @@ nodo* crear_nodo(int x, int y, int val, int n, int m) {
   q->down = NULL;
   q->left = NULL;
   q->right = NULL;
+  q->up_tierra = true;
+  q->down_tierra = true;
+  q->left_tierra = true;
+  q->right_tierra = true;
+
   return q;
 }
 
@@ -96,18 +111,52 @@ void designarDireccionesIniciales(nodo **r, int n, int m) {
       nodo *p = (*buscar_nodo_puntero_posicion(r, i, j));
       if (esCoordenadaValida(i + 1, n)) {
         p->down = (*buscar_nodo_puntero_posicion(r, i + 1, j));
+      } else {
+        p->down = (*buscar_nodo_puntero_posicion(r, 0, j));
       }
       if (esCoordenadaValida(i - 1, n)) {
         p->up = (*buscar_nodo_puntero_posicion(r, i - 1, j));
+      } else {
+        p->up = (*buscar_nodo_puntero_posicion(r, (n - 1), j));
       }
       if (esCoordenadaValida(j + 1, m)) {
         p->right = (*buscar_nodo_puntero_posicion(r, i, j + 1));
+      } else {
+        p->right = (*buscar_nodo_puntero_posicion(r, i, 0));
       }
       if (esCoordenadaValida(j - 1, m)) {
         p->left = (*buscar_nodo_puntero_posicion(r, i, j - 1));
+      } else {
+        p->left = (*buscar_nodo_puntero_posicion(r, i, (m - 1)));
       }
     }
   }
+}
+
+void DestruirTierra(nodo **posVista) {
+  // if ((*posVista)->up != NULL) {
+    (*posVista)->up->down_tierra = false;
+    (*posVista)->up_tierra = false;
+  // }
+  //cortar conexion con down
+  // if ((*posVista)->down != NULL) {
+    (*posVista)->down->up_tierra = false;
+    (*posVista)->down_tierra = false;
+  // }
+
+  //cortar conexion con left
+  // if ((*posVista)->left != NULL) {
+  (*posVista)->left->right_tierra = false;
+  (*posVista)->left_tierra = false;
+  // }
+  //cortar conexion con right
+  // if ((*posVista)->right != NULL) {
+  (*posVista)->right->left_tierra = false;
+  (*posVista)->right_tierra = false;
+
+  (*posVista)->destroyed = true;
+
+  // }
 }
 
 void crearTierra(nodo *posPersonaje, nodo *posVista) {
@@ -125,23 +174,33 @@ void crearTierra(nodo *posPersonaje, nodo *posVista) {
 
   if (difX != 0) {
     if (difX == -1) {
-      posPersonaje->down = posVista;
-      posVista->up = posPersonaje;
+      // posPersonaje->down = posVista;
+      posPersonaje->down_tierra = true;
+      // posVista->up = posPersonaje;
+      posVista->up_tierra = true;
+
     } else if (difX == 1) {
-      posPersonaje->up = posVista;
-      posVista->down = posPersonaje;
+      // posPersonaje->up = posVista;
+      posPersonaje->up_tierra = true;
+      // posVista->down = posPersonaje;
+      posVista->down_tierra = true;
     }
   } else if (difY != 0) {
     if (difY == -1) {
-      posPersonaje->right = posVista;
-      posVista->left = posPersonaje;
+      // posPersonaje->right = posVista;
+      posPersonaje->right_tierra = true;
+      // posVista->left = posPersonaje;
+      posVista->left_tierra = true;
     } else if (difY == 1) {
-      posPersonaje->left = posVista;
-      posVista->right = posPersonaje;
+      // posPersonaje->left = posVista;
+      posPersonaje->left_tierra = true;
+      // posVista->right = posPersonaje;
+      posVista->right_tierra = true;
+
     }
   }
 
-
+  posVista->destroyed = false;
 }
 
 void imprimir_mapa(nodo **r, int n, int m) {
@@ -160,7 +219,7 @@ void imprimir_mapa(nodo **r, int n, int m) {
       } else if (p->val == 3) {
         cout << " ";
       }
-      if (p->right != NULL) {
+      if (p->right_tierra) {
         cout << "-";
       } else {
         cout << " ";
@@ -169,7 +228,7 @@ void imprimir_mapa(nodo **r, int n, int m) {
     }
     cout << endl;
     for (int j = 0; j < m; j++) {
-      if (q->down != NULL) {
+      if (q->down_tierra) {
         cout << "|";
       } else {
         cout << " ";

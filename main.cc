@@ -34,9 +34,10 @@ int main(int argc, char **argv){
       cin >> c;
       switch (c) {
         case 'w':
-          if (esCoordenadaValida((*posVista)->x - 1, n)) {
-            nodo **q = buscar_nodo_puntero_posicion(&r, (*posPersonaje)->x - 1, (*posPersonaje)->y);
-            nodo **up = (buscar_nodo_puntero_posicion(&r, (*posVista)->x - 1, (*posVista)->y));
+          {
+            nodo **q = &(*posPersonaje)->up;
+
+            nodo **up = &(*posVista)->up;
             if (((*up) != NULL) && ((*q) != NULL)) {
               if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
                 if ((*posPersonaje)->destroyed) {
@@ -58,9 +59,10 @@ int main(int argc, char **argv){
           }
           break;
         case 'a':
-          if (esCoordenadaValida((*posVista)->y - 1, m)) {
-            nodo **q = buscar_nodo_puntero_posicion(&r, (*posPersonaje)->x, (*posPersonaje)->y - 1);
-            nodo **left = (buscar_nodo_puntero_posicion(&r, (*posVista)->x, (*posVista)->y - 1));
+          {
+            nodo **q = &(*posPersonaje)->left;
+
+            nodo **left = &(*posVista)->left;
             if ((*left) != NULL) {
               if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
                 if ((*posPersonaje)->destroyed) {
@@ -83,9 +85,9 @@ int main(int argc, char **argv){
           }
           break;
         case 's':
-          if (esCoordenadaValida((*posVista)->x + 1, n)) {
-            nodo **q = buscar_nodo_puntero_posicion(&r, (*posPersonaje)->x + 1, (*posPersonaje)->y);
-            nodo **down = (buscar_nodo_puntero_posicion(&r, (*posVista)->x + 1, (*posVista)->y));
+          {
+            nodo **q = &(*posPersonaje)->down;
+            nodo **down = &(*posVista)->down;
             if ((*down) != NULL) {
               if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
                 if ((*posPersonaje)->destroyed) {
@@ -107,9 +109,9 @@ int main(int argc, char **argv){
           }
           break;
         case 'd':
-          if (esCoordenadaValida((*posVista)->y + 1, m)) {
-            nodo **q = buscar_nodo_puntero_posicion(&r, (*posPersonaje)->x, (*posPersonaje)->y + 1);
-            nodo **right = (buscar_nodo_puntero_posicion(&r, (*posVista)->x, (*posVista)->y + 1));
+          {
+            nodo **q = &(*posPersonaje)->right;
+            nodo **right = &(*posVista)->right;
             if ((*right) != NULL) {
               if (((*q)->x == lastVista->x) && ((*q)->y == lastVista->y)) {
                 if ((*posPersonaje)->destroyed) {
@@ -131,36 +133,16 @@ int main(int argc, char **argv){
           }
           break;
         case 'q':
-
-          //cortar conexion con up
-          if ((*posVista)->up != NULL) {
-            (*posVista)->up->down = NULL;
-            (*posVista)->up = NULL;
+          {
+            DestruirTierra(posVista);
+            break;
           }
-          //cortar conexion con down
-          if ((*posVista)->down != NULL) {
-            (*posVista)->down->up = NULL;
-            (*posVista)->down = NULL;
-          }
-
-          //cortar conexion con left
-          if ((*posVista)->left != NULL) {
-          (*posVista)->left->right = NULL;
-          (*posVista)->left = NULL;
-          }
-          //cortar conexion con right
-          if ((*posVista)->right != NULL) {
-          (*posVista)->right->left = NULL;
-          (*posVista)->right = NULL;
-          }
-
-          (*posVista)->destroyed = true;
-
-          break;
         case 'e':
-          crearTierra((*posPersonaje), (*posVista));
-          (*posVista)->destroyed = false;
-          break;
+          {
+            crearTierra((*posPersonaje), (*posVista));
+            break;
+          }
+
       }
     }
 
