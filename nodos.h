@@ -225,8 +225,8 @@ void crearTierra(nodo *posPersonaje, nodo *posVista) {
 
 void imprimir_mapa(nodo **r, int n, int m) {
   cout << endl << endl;
-  nodo *p = (*r);
-  nodo *q = p;
+  nodo *p = (*r),
+  *q = p;
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
       if (p->val == 0) {

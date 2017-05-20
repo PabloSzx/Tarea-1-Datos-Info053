@@ -1,8 +1,18 @@
 #include "nodos.h"
 
 using namespace std;
-int main(){
+int main(int argc, char **argv){
+	
 	int n = 5, m = 10;
+	if (argc >= 3) {
+		if (atoi(argv[1]) > 0) {
+			n = atoi(argv[1]);
+		}
+		if (atoi(argv[2]) > 0) {
+			m = atoi(argv[2]);
+		}
+	}
+
 	bool play = true, err = true;
 	char c;
 	nodo *r = crear_nodo(0, 0, 1);
