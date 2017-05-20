@@ -1,23 +1,21 @@
 #ifndef NODOS_H
 #define NODOS_H
-
 #include <iostream>
 
-
 typedef struct nodo{
-    int x;
-    int y;
-    int val;
-    bool destroyed;
-    struct nodo *up;
-    bool up_tierra;
-    struct nodo *down;
-    bool down_tierra;
-    struct nodo *right;
-    bool right_tierra;
-    struct nodo *left;
-    bool left_tierra;
-    struct nodo *next;
+  int x;
+  int y;
+  int val;
+  bool destroyed;
+  struct nodo *up;
+  bool up_tierra;
+  struct nodo *down;
+  bool down_tierra;
+  struct nodo *right;
+  bool right_tierra;
+  struct nodo *left;
+  bool left_tierra;
+  struct nodo *next;
 }nodo;
 
 nodo* crear_nodo(int x, int y, int val);
@@ -129,19 +127,19 @@ void designarDireccionesIniciales(nodo **r, int n, int m) {
 }
 
 void destruirTierra(nodo **posVista) {
-    (*posVista)->up->down_tierra = false;
-    (*posVista)->up_tierra = false;
+  (*posVista)->up->down_tierra = false;
+  (*posVista)->up_tierra = false;
 
-    (*posVista)->down->up_tierra = false;
-    (*posVista)->down_tierra = false;
+  (*posVista)->down->up_tierra = false;
+  (*posVista)->down_tierra = false;
 
-    (*posVista)->left->right_tierra = false;
-    (*posVista)->left_tierra = false;
+  (*posVista)->left->right_tierra = false;
+  (*posVista)->left_tierra = false;
 
-    (*posVista)->right->left_tierra = false;
-    (*posVista)->right_tierra = false;
+  (*posVista)->right->left_tierra = false;
+  (*posVista)->right_tierra = false;
 
-    (*posVista)->destroyed = true;
+  (*posVista)->destroyed = true;
 }
 
 void mover(nodo **posPersonaje, nodo **posVista, char direction) {
@@ -178,7 +176,7 @@ void mover(nodo **posPersonaje, nodo **posVista, char direction) {
   if (((*q)->x == (*posVista)->x) && ((*q)->y == (*posVista)->y)) {
 
     if ((*posPersonaje)->destroyed) {
-    (*posPersonaje)->val = 3;
+      (*posPersonaje)->val = 3;
     } else {
       (*posPersonaje)->val = 0;
     }
@@ -188,7 +186,7 @@ void mover(nodo **posPersonaje, nodo **posVista, char direction) {
     if ((*posVista)->destroyed) {
       (*posVista)->val = 3;
     } else {
-    (*posVista)->val = 0;
+      (*posVista)->val = 0;
     }
     (*q)->val = 2;
   }
@@ -261,18 +259,18 @@ void recorrer(nodo *r) {
   while (r != NULL) {
     cout << "-" << endl;
     cout << "(" << r->x << "," << r->y << ")" << endl;
-      if (r->up != NULL) {
-        cout << "Arriba del punto es: " << "(" << r->up->x << "," <<r->up->y << ")" << endl;
-      }
-      if (r->down != NULL) {
-        cout << "Abajo del punto es: " << "(" << r->down->x << "," <<r->down->y << ")" << endl;
-      }
-      if (r->left != NULL) {
-        cout << "Izquierda del punto es: " << "(" << r->left->x << "," <<r->left->y << ")" << endl;
-      }
-      if (r->right != NULL) {
-        cout << "Derecha del punto es: " << "(" << r->right->x << "," <<r->right->y << ")" << endl;
-      }
+    if (r->up != NULL) {
+      cout << "Arriba del punto es: " << "(" << r->up->x << "," <<r->up->y << ")" << endl;
+    }
+    if (r->down != NULL) {
+      cout << "Abajo del punto es: " << "(" << r->down->x << "," <<r->down->y << ")" << endl;
+    }
+    if (r->left != NULL) {
+      cout << "Izquierda del punto es: " << "(" << r->left->x << "," <<r->left->y << ")" << endl;
+    }
+    if (r->right != NULL) {
+      cout << "Derecha del punto es: " << "(" << r->right->x << "," <<r->right->y << ")" << endl;
+    }
 
     r = r->next;
   }
