@@ -1,5 +1,6 @@
 #ifndef NODOS_H
 #define NODOS_H
+
 #include <iostream>
 
 typedef struct nodo{
@@ -28,7 +29,6 @@ void destruirTierra(nodo **posVista);
 void mover(nodo **posPersonaje, nodo **posVista, char direction);
 void crearTierra(nodo *posPersonaje, nodo *posVista);
 void imprimir_mapa(nodo **r, int n, int m);
-void recorrer(nodo *r);
 
 using namespace std;
 
@@ -68,32 +68,6 @@ void crear_mapa(nodo **r, int n, int m) {
   designarDireccionesIniciales(r, n, m);
 }
 
-nodo** buscar_nodo_puntero_posicion(nodo **r, int x, int y) {
-  if (((*r)->x == x) && ((*r)->y == y)) {
-    return (r);
-  } else {
-    if ((*r)->next != NULL) {
-      return buscar_nodo_puntero_posicion(&(*r)->next, x, y);
-    } else {
-      cout << "Nodo no encontrado" << endl;
-      return NULL;
-    }
-  }
-}
-
-nodo** buscar_nodo_puntero_tipo(nodo **r, int val) {
-  if (((*r)->val == val)) {
-    return (r);
-  } else {
-    if ((*r)->next != NULL) {
-      return buscar_nodo_puntero_tipo(&(*r)->next, val);
-    } else {
-      cout << "Nodo no encontrado" << endl;
-      return NULL;
-    }
-  }
-}
-
 bool esCoordenadaInterior(int n, int max) {
   return (n < max && n >=0);
 }
@@ -109,7 +83,7 @@ void designarDireccionesIniciales(nodo **r, int n, int m) {
       }
       if (esCoordenadaInterior(i - 1, n)) {
         p->up = (*buscar_nodo_puntero_posicion(r, i - 1, j));
-      } else {
+      } else {
         p->up = (*buscar_nodo_puntero_posicion(r, (n - 1), j));
       }
       if (esCoordenadaInterior(j + 1, m)) {
@@ -123,6 +97,28 @@ void designarDireccionesIniciales(nodo **r, int n, int m) {
         p->left = (*buscar_nodo_puntero_posicion(r, i, (m - 1)));
       }
     }
+  }
+}
+
+nodo** buscar_nodo_puntero_posicion(nodo **r, int x, int y) {
+  if (((*r)->x == x) && ((*r)->y == y)) {
+    return (r);
+  } else if ((*r)->next != NULL){
+    return buscar_nodo_puntero_posicion(&(*r)->next, x, y);
+  } else {
+    cout << "Nodo no encontrado" << endl;
+    return NULL;
+  }
+}
+
+nodo** buscar_nodo_puntero_tipo(nodo **r, int val) {
+  if ((*r)->val == val) {
+    return (r);
+  } else if ((*r)->next != NULL){
+    return buscar_nodo_puntero_tipo(&(*r)->next, val);
+  } else {
+    cout << "Nodo no encontrado" << endl;
+    return NULL;
   }
 }
 
@@ -143,8 +139,7 @@ void destruirTierra(nodo **posVista) {
 }
 
 void mover(nodo **posPersonaje, nodo **posVista, char direction) {
-  nodo **q;
-  nodo **r;
+  nodo **q, **r;
 
   switch (direction) {
     case 'w':
@@ -193,24 +188,35 @@ void mover(nodo **posPersonaje, nodo **posVista, char direction) {
 }
 
 void crearTierra(nodo *posPersonaje, nodo *posVista) {
-  int difX = (posPersonaje)->x - (posVista)->x;
-  int difY = (posPersonaje)->y - (posVista)->y;
+  int difX = (posPersonaje)->x - (posVista)->x,
+  difY = (posPersonaje)->y - (posVista)->y;
 
-  if (difX != 0) {
-    if (difX == -1) {
+  switch (difX) {
+    case -1:
+    {
       posPersonaje->down_tierra = true;
       posVista->up_tierra = true;
-    } else if (difX == 1) {
+      break;
+    }
+    case 1:
+    {
       posPersonaje->up_tierra = true;
       posVista->down_tierra = true;
+      break;
     }
-  } else if (difY != 0) {
-    if (difY == -1) {
+  }
+  switch (difY) {
+    case -1:
+    {
       posPersonaje->right_tierra = true;
       posVista->left_tierra = true;
-    } else if (difY == 1) {
+      break;
+    }
+    case 1:
+    {
       posPersonaje->left_tierra = true;
       posVista->right_tierra = true;
+      break;
     }
   }
 
@@ -222,7 +228,6 @@ void imprimir_mapa(nodo **r, int n, int m) {
   nodo *p = (*r);
   nodo *q = p;
   for (int i = 0; i < n; i++) {
-    nodo *aux = p;
     for (int j = 0; j < m; j++) {
       if (p->val == 0) {
         cout << "O";
@@ -251,28 +256,6 @@ void imprimir_mapa(nodo **r, int n, int m) {
       q = q->next;
     }
     cout << endl;
-  }
-}
-
-void recorrer(nodo *r) {
-
-  while (r != NULL) {
-    cout << "-" << endl;
-    cout << "(" << r->x << "," << r->y << ")" << endl;
-    if (r->up != NULL) {
-      cout << "Arriba del punto es: " << "(" << r->up->x << "," <<r->up->y << ")" << endl;
-    }
-    if (r->down != NULL) {
-      cout << "Abajo del punto es: " << "(" << r->down->x << "," <<r->down->y << ")" << endl;
-    }
-    if (r->left != NULL) {
-      cout << "Izquierda del punto es: " << "(" << r->left->x << "," <<r->left->y << ")" << endl;
-    }
-    if (r->right != NULL) {
-      cout << "Derecha del punto es: " << "(" << r->right->x << "," <<r->right->y << ")" << endl;
-    }
-
-    r = r->next;
   }
 }
 
